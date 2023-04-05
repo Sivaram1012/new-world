@@ -1,19 +1,44 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+name : NetCore-CustomerApi-CI
 trigger:
-- main
-
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - CustomerApi/*
+ 
 pool:
-  vmImage: ubuntu-latest
-
+  vmImage: 'ubuntu-latest'
+ 
+variables:
+  buildConfiguration: 'Release'
+ 
 steps:
-- script: echo Hello swathi!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '**/CustomerApi*.csproj'
+  displayName: 'Restore Nuget Packages'
+ 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/CustomerApi*.csproj'
+    arguments: '--no-restore'
+  displayName: 'Build projects'
+ 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '**/*Test.csproj'
+    arguments: '--no-restore --no-build'
+  displayName: 'Run Tests'
+ 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**/CustomerApi.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
+    modifyOutputPath: false
+  displayName: 'Publish CustomerApi'
