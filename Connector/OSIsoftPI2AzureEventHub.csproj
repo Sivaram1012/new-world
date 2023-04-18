@@ -184,6 +184,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+  <PackageReference Include="dotnet-sonarscanner" Version="5.13.0" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
