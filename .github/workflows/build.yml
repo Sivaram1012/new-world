@@ -37,12 +37,17 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Download and install SonarScanner for MSBuild
+        run: |
+        Invoke-WebRequest https://binaries.sonarsource.com/Distribution/sonar-scanner-msbuild/sonar-scanner-msbuild-5.3.1.35507-net46.zip -OutFile sonar-scanner-msbuild.zip
+        Expand-Archive sonar-scanner-msbuild.zip -DestinationPath C:\sonar-scanner
+        Remove-Item sonar-scanner-msbuild.zip
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          SonarScanner.MSBuild.exe begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          msbuild  Sivaram_new-world/OSIsoftPI2AzureEventHub.sln /p:sonar.verbose=true
-          SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+         "C:\sonar-scanner\SonarScanner.MSBuild.exe" begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          msbuild  Sivaram_new-world/OSIsoftPI2AzureEventHub.sln /t:Rebuild /p:Configuration=Release
+         "C:\sonar-scanner\SonarScanner.MSBuild.exe" end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
