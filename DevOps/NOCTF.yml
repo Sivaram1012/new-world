@@ -1,0 +1,36 @@
+trigger: 
+- dev
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: HashiCorp.terraform-tool-installer.TerraformToolInstaller@0
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: '1.1.0'
+
+- task: HashiCorp.terraform.TerraformCLI@0
+  displayName: 'Terraform Init'
+  inputs:
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+- task: HashiCorp.terraform.TerraformCLI@0
+  displayName: 'Terraform Plan'
+  inputs:
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+    
+- task: HashiCorp.terraform.TerraformCLI@0
+  displayName: 'Terraform apply'
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+- task: AzureCLI@2
+  displayName: 'Azure CLI'
+  inputs:
+    azureSubscription: '<subscription-name>'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az eventhubs eventhub create --resource-group <resource-group-name> --namespace-name <namespace-name> --name <eventhub-name> --partition-count 2'

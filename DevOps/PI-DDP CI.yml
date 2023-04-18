@@ -1,0 +1,47 @@
+trigger: 
+- main
+- dev
+
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  #appServiceName: '<your app service name>'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK'
+  inputs:
+    version: '6.x'
+    includePreviewVersions: true
+
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish project'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-o $(Build.ArtifactStagingDirectory)'
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: '<your subscription name>'
+    appName: '$(appServiceName)'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+

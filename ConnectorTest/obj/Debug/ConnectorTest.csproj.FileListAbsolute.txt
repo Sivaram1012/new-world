@@ -1,0 +1,2 @@
+C:\Users\EXSAH101\source\repos\Data-Platform_PI-Connector\ConnectorTest\obj\Debug\ConnectorTest.csproj.AssemblyReference.cache
+C:\Users\EXSAH101\source\repos\Data-Platform_PI-Connector\ConnectorTest\obj\Debug\ConnectorTest.csproj.CoreCompileInputs.cache

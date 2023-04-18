@@ -1,44 +1,43 @@
-name : NetCore-CustomerApi-CI
 trigger:
-  branches:
-    include:
-      - master
-  paths:
-    include:
-      - CustomerApi/*
+- none
  
 pool:
-  vmImage: 'ubuntu-latest'
- 
-variables:
-  buildConfiguration: 'Release'
+  vmImage: 'windows-latest'
  
 steps:
-- task: DotNetCoreCLI@2
+- task: NuGetToolInstaller@1
+  name: 'NuGetToolInstaller'
+  displayName: 'NuGet tool installer'
+ 
+- task: NuGetCommand@2
+  name: 'NuGetRestore'
+  displayName: 'NuGet restore packages'
   inputs:
     command: 'restore'
-    projects: '**/CustomerApi*.csproj'
-  displayName: 'Restore Nuget Packages'
+    restoreSolution: '$(solution)'
+    feedsToUse: 'select'
  
 - task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/CustomerApi*.csproj'
-    arguments: '--no-restore'
-  displayName: 'Build projects'
- 
-- task: DotNetCoreCLI@2
+  name: 'Tests'
+  displayName: 'Run tests'
   inputs:
     command: 'test'
-    projects: '**/*Test.csproj'
-    arguments: '--no-restore --no-build'
-  displayName: 'Run Tests'
+    projects: '$(solution)'
+    arguments: '--configuration $(BuildConfiguration)'
  
 - task: DotNetCoreCLI@2
+  name: 'Publish'
+  displayName: 'Publish'
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: '**/CustomerApi.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
-    modifyOutputPath: false
-  displayName: 'Publish CustomerApi'
+    projects: '$(project)'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: false
+ 
+- task: PublishBuildArtifacts@1
+  name: 'PublishBuildArtifacts'
+  displayName: 'Publish build artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'AzureTestProject'

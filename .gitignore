@@ -1,0 +1,12 @@
+.vscode/
+.idea/
+*.tmp.*
+*.tmp
+tmp/
+.DS_Store
+venv/
+.venv
+env/
+*.log
+.env
+data/
