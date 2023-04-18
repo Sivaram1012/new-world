@@ -37,9 +37,9 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Install SonarScanner for MSBuild
+      - name: Install SonarCloud Scanner for MSBuild
         run: |
-          dotnet tool install --global dotnetscanner
+          dotnet tool install --global dotnet-sonarscanner
           dotnet sonarscanner /version
       - name: Build and analyze
         env:
