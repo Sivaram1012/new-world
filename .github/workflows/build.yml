@@ -37,9 +37,10 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Install SonarCloud Scanner for MSBuild
-        run: |
-         dotnet tool install --global dotnet-sonarscanner --version 5.13.0
+      - name: setup-msbuild
+         uses: microsoft/setup-msbuild@v1
+      - name: Build app for release
+         run: msbuild new-world\connector\OSIsoftPI2AzureEventHub.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
