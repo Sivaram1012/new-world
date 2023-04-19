@@ -37,10 +37,9 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: setup-msbuild
-         uses: microsoft/setup-msbuild@v1
-      - name: Build app for release
-         run: msbuild new-world\connector\OSIsoftPI2AzureEventHub.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Install SonarCloud Scanner for MSBuild
+        run: |
+         dotnet tool install --global dotnet-sonarscanner --version 5.13.0
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -48,5 +47,6 @@ jobs:
         shell: powershell
         run: |
           SonarCloud scanner.MSBuild.exe begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          msbuild  Sivaram1012_new-world/OSIsoftPI2AzureEventHub.sln /t:Rebuild
+          msbuild new-world\connector\OSIsoftPI2AzureEventHub.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+          msbuild sivaram1012_new-world/OSIsoftPI2AzureEventHub.sln /t:Rebuild
           SonarCloud scanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
