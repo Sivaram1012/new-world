@@ -36,17 +36,16 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-SonarScanner --tool-path .\.sonar\scanner
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Install SonarCloud Scanner for MSBuild
         run: |
-         dotnet tool install --global dotnet-SonarScanner --version 5.13.0
+         dotnet tool install --global dotnet-sonarscanner --version 5.13.0
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          SonarScanner.MSBuild.exe begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          msbuild new-world\connector\OSIsoftPI2AzureEventHub.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           msbuild sivaram1012_new-world/OSIsoftPI2AzureEventHub.sln /t:Rebuild
-          SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
