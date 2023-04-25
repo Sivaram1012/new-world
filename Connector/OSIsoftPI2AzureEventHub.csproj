@@ -192,3 +192,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
+ <ItemGroup>
+    <SonarQubeSetting Include="sonar.exclusions">
+      <Value>NotAnalyzedFile.cs,Libraries/**/*.*</Value>
+    </SonarQubeSetting>
+   </ItemGroup>
