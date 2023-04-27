@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>OSIsoftPI2AzureEventHub</RootNamespace>
     <AssemblyName>OSIsoftPI2AzureEventHub</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -196,8 +196,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
- <ItemGroup>
-    <SonarQubeSetting Include="sonar.exclusions">
-      <Value>NotAnalyzedFile.cs,Libraries/**/*.*</Value>
-    </SonarQubeSetting>
-   </ItemGroup>
+ <Target Name="SonarQube" BeforeTargets="Build">
+  <Exec Command="$(MSBuildThisFileDirectory)..\sonar-scanner-msbuild-5.2.1.31210-net46\SonarScanner.MSBuild.exe" />
+</Target>
+
