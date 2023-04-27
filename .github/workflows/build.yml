@@ -24,4 +24,4 @@ jobs:
     - name: Build and Analyze with SonarCloud
       run: msbuild /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU" /p:AnalysisMode=SonarQube /p:SonarQubeConfigPath=SonarQube.Analysis.xml /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       env:
-        Solution: 'new-world/OSIsoftPI2AzureEventHub.sln'
+        Solution: 'new-world/Connector/OSIsoftPI2AzureEventHub.csproj'
