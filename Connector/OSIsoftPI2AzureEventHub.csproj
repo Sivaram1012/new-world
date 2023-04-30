@@ -192,5 +192,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
+<ItemGroup>
+  <PackageReference Include="dotnet-sonarscanner" Version="4.8.0" />
+</ItemGroup>
+
  
 
