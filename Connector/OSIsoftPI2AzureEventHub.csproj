@@ -34,10 +34,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
-  <Property Name="sonar.host.url">https://sonarcloud.io</Property>
-  <Property Name="sonar.login">sivaram1012</Property>
-</SonarQubeAnalysisProperties>
   <ItemGroup>
     <Reference Include="Azure.Core, Version=1.30.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Azure.Core.1.30.0\lib\net461\Azure.Core.dll</HintPath>
@@ -196,7 +192,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
- <Target Name="SonarQube" BeforeTargets="Build">
-  <Exec Command="$(MSBuildThisFileDirectory)..\sonar-scanner-msbuild-5.2.1.31210-net46\SonarScanner.MSBuild.exe" />
-</Target>
+ 
 
