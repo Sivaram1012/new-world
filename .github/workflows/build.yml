@@ -21,7 +21,6 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool install --global dotnet-sonarscanner --version 4.8.0
-          java -jar sonar-scanner-cli-4.8.0-windows/bin/sonar-scanner 
       - name: Set up MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.2
       - name: Build with MSBuild.exe
