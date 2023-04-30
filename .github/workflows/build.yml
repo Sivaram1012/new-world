@@ -49,6 +49,6 @@ jobs:
         shell: powershell
         run: |
           SonarScanner.MSBuild.exe begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          MSBuild.exe new-world/Connector/OSIsoftPI2AzureEventHub.csproj /t:Rebuild
+          MSBuild.exe new-world/OSIsoftPI2AzureEventHub.sln /t:Rebuild
           SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           
