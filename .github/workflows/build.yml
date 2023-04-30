@@ -42,7 +42,12 @@ jobs:
         uses: microsoft/setup-msbuild@v1
         with:
          vs-version: '17.0'
-      - name: Build and analyze
+      - uses: actions/checkout@v2
+      - name: Set up MSBuild.exe
+        uses: microsoft/setup-msbuild@v1.0.2
+      - name: Build with MSBuild.exe
+        run: msbuild /t:Restore,Build
+      - name: Run SonarScanner.MSBuild.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
