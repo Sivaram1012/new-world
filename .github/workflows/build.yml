@@ -38,11 +38,6 @@ jobs:
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
           dotnet tool install --global dotnet-sonarscanner
-      - name: Setup MSBuild path
-        uses: microsoft/setup-msbuild@v1
-        with:
-         vs-version: '17.0'
-      - uses: actions/checkout@v2
       - name: Set up MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.2
       - name: Build with MSBuild.exe
