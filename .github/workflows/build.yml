@@ -21,6 +21,7 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool install --global dotnet-sonarscanner
+          java -jar sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner 
       - name: Set up MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.2
       - name: Build with MSBuild.exe
@@ -31,7 +32,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          java -jar sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.projectKey=Sivaram1012_new-world -Dsonar.organization=sivaram1012 -Dsonar.sources=.
           SonarScanner.MSBuild.exe begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           MSBuild.exe new-world/OSIsoftPI2AzureEventHub.sln /t:Rebuild
           SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
