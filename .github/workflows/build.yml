@@ -1,4 +1,4 @@
-name: build
+name: SonarCloud
 on:
   push:
     branches:
@@ -15,23 +15,34 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu' # Alternative distribution options are available.
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool install --global dotnet-sonarscanner --version 4.8.0
-      - name: Set up MSBuild.exe
-        uses: microsoft/setup-msbuild@v1
-      - name: Build with MSBuild.exe
-        run: msbuild /t:Restore,Build
-      - name: Run SonarScanner.MSBuild.exe
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          SonarScanner.MSBuild.exe begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          MSBuild.exe new-world/Connector/OSIsoftPI2AzureEventHub.csproj /t:Rebuild
-          SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Sivaram1012_new-world" /o:"sivaram1012" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet OSIsoftPI2AzureEventHub.sln --configure release
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
